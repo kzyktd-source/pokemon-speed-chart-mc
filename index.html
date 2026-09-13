@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ポケモン素早さ早見表（MC環境対応版）</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    padding: 8px;
+    background: #0f172a;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    color: #ffffff;
+    font-size: 11px;
+  }
+  .card {
+    background: #1e293b;
+    border-radius: 8px;
+    overflow-x: auto;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+  }
+  .title {
+    padding: 10px;
+    text-align: center;
+    font-weight: bold;
+    background: #334155;
+    color: #ffffff;
+    font-size: 13px;
+  }
+  .legend {
+    padding: 6px;
+    font-size: 10px;
+    text-align: center;
+    background: #1e293b;
+    border-bottom: 1px solid #334155;
+    line-height: 1.6;
+  }
+  .tip {
+    font-size: 9px;
+    color: #94a3b8;
+    margin-top: 3px;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    line-height: 1.25;
+    font-size: 10px;
+    color: #ffffff;
+  }
+  th {
+    background: #1e293b;
+    color: #94a3b8;
+    border-bottom: 1px solid #334155;
+    padding: 6px 4px;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+  td {
+    padding: 4px 5px;
+    border-bottom: 1px solid #334155;
+    vertical-align: middle;
+    white-space: nowrap;
+  }
+  .spd-cell {
+    text-align: center;
+    font-weight: bold;
+    color: #38bdf8;
+    cursor: pointer;
+    user-select: none;
+    border-right: 1px solid #334155;
+    width: 14%;
+  }
+  .spd-cell:hover, .spd-cell:active {
+    background: rgba(56, 189, 248, 0.2);
+  }
+  tr.border-line td {
+    border-bottom: 2.5px solid #ef4444 !important;
+  }
+  .pk-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    padding: 2px 5px;
+    margin: 1px 0;
+    border-radius: 4px;
+    cursor: pointer;
+    border: 1.5px solid transparent;
+    user-select: none;
+    transition: all 0.15s ease;
+  }
+  .pk-btn:hover, .pk-btn:active {
+    background: rgba(255, 255, 255, 0.1);
+  }
+  .pk-btn.active {
+    border-color: #ef4444 !important;
+    background: rgba(239, 68, 68, 0.25) !important;
+    box-shadow: 0 0 6px rgba(239, 68, 68, 0.7);
+  }
+  .pk-btn img {
+    height: 18px;
+    width: 18px;
+    object-fit: contain;
+  }
+  .dash {
+    color: #475569;
+    text-align: center;
+    display: block;
+  }
+  .r-10 { color: #ff007f; font-weight: bold; }
+  .r-20 { color: #ffff00; font-weight: bold; }
+  .r-50 { color: #ffffff; }
+  .r-100 { color: #94a3b8; }
+  .r-mc { color: #00f0ff; font-weight: bold; text-shadow: 0 0 5px rgba(0, 240, 255, 0.4); }
+</style>
+</head>
+<body>
+
+<div class="card">
+  <div class="title">ポケモン素早さ早見表（MC環境対応版）</div>
+  <div class="legend">
+    <span class="r-10">■ 1〜10位</span> &nbsp;
+    <span class="r-20">■ 11〜20位</span> &nbsp;
+    <span class="r-50">■ 21〜50位</span> &nbsp;
+    <span class="r-100">■ 51〜100位</span> &nbsp;
+    <span class="r-mc">■ レギュMC追加枠</span>
+    <div class="tip">※ポケモン名タップで赤枠選択 / 数値タップで赤の水平線表示</div>
+  </div>
+
+  <table id="spdMainTable">
+    <thead>
+      <tr>
+        <th style="width:14%;text-align:center;">実数値</th>
+        <th style="width:32%;text-align:left;">最速(↑252)</th>
+        <th style="width:27%;text-align:left;">準速(252)</th>
+        <th style="width:27%;text-align:left;">無振(0)</th>
+      </tr>
+    </thead>
+    <tbody id="spdTbody"></tbody>
+  </table>
+</div>
+
+<script>
+(function() {
+  var raw = [{"s": 223, "a": [["メガアブソルZ", "mc", "absol-mega"], ["メガガブリアスZ", "mc", "garchomp-mega"], ["メガルカリオZ", "mc", "lucario-mega"]], "b": [], "c": []}, {"s": 216, "a": [["メガジュカイン", 100, "sceptile-mega"]], "b": [], "c": []}, {"s": 213, "a": [["ドラパルト", 50, "dragapult"]], "b": [], "c": []}, {"s": 205, "a": [["メガミミロップ", 50, "lopunny-mega"]], "b": [], "c": []}, {"s": 203, "a": [], "b": [["メガアブソルZ", "mc", "absol-mega"], ["メガガブリアスZ", "mc", "garchomp-mega"], ["メガルカリオZ", "mc", "lucario-mega"]], "c": []}, {"s": 200, "a": [["メガゲンガー", 20, "gengar-mega"], ["メガペンドラー", 100, "scolipede"]], "b": [], "c": []}, {"s": 197, "a": [], "b": [["メガジュカイン", 100, "sceptile-mega"]], "c": []}, {"s": 195, "a": [["メガカエンジシ", 100, "pyroar"]], "b": [], "c": []}, {"s": 194, "a": [], "b": [["ドラパルト", 50, "dragapult"]], "c": []}, {"s": 192, "a": [["マスカーニャ", 10, "meowscarada"]], "b": [], "c": []}, {"s": 191, "a": [["メガゲッコウガ", 20, "greninja"], ["ゲッコウガ", 20, "greninja"]], "b": [], "c": []}, {"s": 189, "a": [["オオニューラ", 50, "sneasler"], ["メガボーマンダ", "mc", "salamence-mega"], ["インテレオン", "mc", "inteleon"]], "b": [], "c": []}, {"s": 188, "a": [["メガユキメノコ", 100, "froslass"], ["ユキメノコ", 100, "froslass"], ["エースバーン", "mc", "cinderace"]], "b": [], "c": []}, {"s": 187, "a": [["エルフーン", 100, "whimsicott"], ["ジュカイン", 100, "sceptile"]], "b": [["メガミミロップ", 50, "lopunny-mega"]], "c": []}, {"s": 183, "a": [["メガスターミー", 50, "starmie"], ["スターミー", 50, "starmie"], ["ペルシアン", "mc", "persian"], ["ペルシアン(A)", "mc", "persian-alola"]], "b": [], "c": []}, {"s": 182, "a": [["ジャローダ", 100, "serperior"]], "b": [["メガゲンガー", 20, "gengar-mega"], ["メガペンドラー", 100, "scolipede"]], "c": []}, {"s": 180, "a": [["メガルカリオ", 50, "lucario-mega"], ["ゲンガー", 20, "gengar"], ["イッカネズミ", 100, "maushold"], ["Hゾロアーク", 100, "zoroark-hisui"]], "b": [], "c": []}, {"s": 178, "a": [["メガメタグロス", 10, "metagross-mega"], ["メガライチュウY", 20, "raichu"], ["ライチュウ", 20, "raichu"], ["エーフィ", 100, "espeon"]], "b": [["メガカエンジシ", 100, "pyroar"]], "c": []}, {"s": 177, "a": [["キュウコン(A)", 50, "ninetales-alola"]], "b": [], "c": []}, {"s": 175, "a": [], "b": [["マスカーニャ", 10, "meowscarada"]], "c": []}, {"s": 174, "a": [["ミミロップ", 50, "lopunny"]], "b": [["メガゲッコウガ", 20, "greninja"], ["ゲッコウガ", 20, "greninja"]], "c": []}, {"s": 172, "a": [["パーモット", "mc", "pawmot"]], "b": [["オオニューラ", 50, "sneasler"], ["メガユキメノコ", 100, "froslass"], ["ユキメノコ", 100, "froslass"], ["メガボーマンダ", "mc", "salamence-mega"], ["インテレオン", "mc", "inteleon"]], "c": []}, {"s": 171, "a": [["メガマフォクシー", 10, "delphox"], ["マフォクシー", 10, "delphox"]], "b": [["エルフーン", 100, "whimsicott"], ["ジュカイン", 100, "sceptile"], ["エースバーン", "mc", "cinderace"]], "c": [["メガアブソルZ", "mc", "absol-mega"], ["メガガブリアスZ", "mc", "garchomp-mega"], ["メガルカリオZ", "mc", "lucario-mega"]]}, {"s": 169, "a": [["ガブリアス", 10, "garchomp"]], "b": [], "c": []}, {"s": 167, "a": [["メガムクホーク", 50, "staraptor"], ["ムクホーク", 50, "staraptor"], ["メガリザードンY", 20, "charizard-megay"], ["リザードン", 20, "charizard"], ["メガバシャーモ", 50, "blaziken-mega"], ["バシャーモ", 50, "blaziken"], ["ウルガモス", 20, "volcarona"], ["メガガルーラ", 100, "kangaskhan-mega"], ["ガルーラ", 100, "kangaskhan"], ["メガサーナイト", 100, "gardevoir-mega"], ["サーナイト", 100, "gardevoir"], ["エルレイド", 100, "gallade"], ["ボーマンダ", "mc", "salamence"]], "b": [["メガスターミー", 50, "starmie"], ["スターミー", 50, "starmie"], ["ペルシアン", "mc", "persian"], ["ペルシアン(A)", "mc", "persian-alola"]], "c": []}, {"s": 166, "a": [], "b": [["ジャローダ", 100, "serperior"]], "c": []}, {"s": 165, "a": [["サザンドラ", 20, "hydreigon"]], "b": [], "c": [["メガジュカイン", 100, "sceptile-mega"]]}, {"s": 164, "a": [], "b": [["メガルカリオ", 50, "lucario-mega"], ["ゲンガー", 20, "gengar"], ["イッカネズミ", 100, "maushold"], ["Hゾロアーク", 100, "zoroark-hisui"]], "c": []}, {"s": 162, "a": [["ミミッキュ", 10, "mimikyu"]], "b": [["メガメタグロス", 10, "metagross-mega"], ["メガライチュウY", 20, "raichu"], ["ライチュウ", 20, "raichu"], ["エーフィ", 100, "espeon"]], "c": [["ドラパルト", 50, "dragapult"]]}, {"s": 161, "a": [["イエッサン♂", "mc", "indeedee"]], "b": [["キュウコン(A)", 50, "ninetales-alola"]], "c": []}, {"s": 160, "a": [["グライオン", 100, "gliscor"]], "b": [], "c": []}, {"s": 158, "a": [["クエスパトラ", 100, "espathra"], ["イキリンコ", "mc", "squawkabilly"]], "b": [["ミミロップ", 50, "lopunny"]], "c": []}, {"s": 157, "a": [], "b": [["パーモット", "mc", "pawmot"]], "c": []}, {"s": 156, "a": [["ルカリオ", 50, "lucario"], ["バリヤード", "mc", "mr-mime"], ["フォクスライ", "mc", "thievul"]], "b": [["メガマフォクシー", 10, "delphox"], ["マフォクシー", 10, "delphox"]], "c": []}, {"s": 155, "a": [], "b": [], "c": [["メガミミロップ", 50, "lopunny-mega"]]}, {"s": 154, "a": [["ドリュウズ", 50, "excadrill"]], "b": [["ガブリアス", 10, "garchomp"]], "c": []}, {"s": 152, "a": [["セグレイブ", "mc", "baxcalibur"], ["メガセグレイブ", "mc", "baxcalibur"]], "b": [["メガムクホーク", 50, "staraptor"], ["ムクホーク", 50, "staraptor"], ["メガリザードンY", 20, "charizard-megay"], ["リザードン", 20, "charizard"], ["メガバシャーモ", 50, "blaziken-mega"], ["バシャーモ", 50, "blaziken"], ["ウルガモス", 20, "volcarona"], ["メガガルーラ", 100, "kangaskhan-mega"], ["ガルーラ", 100, "kangaskhan"], ["メガサーナイト", 100, "gardevoir-mega"], ["サーナイト", 100, "gardevoir"], ["エルレイド", 100, "gallade"], ["ボーマンダ", "mc", "salamence"]], "c": [["メガゲンガー", 20, "gengar-mega"], ["メガペンドラー", 100, "scolipede"]]}, {"s": 151, "a": [["キラフロル", 20, "glimmora"], ["Wロトム", 50, "rotom-wash"], ["Hロトム", 100, "rotom-heat"], ["Hウインディ", 100, "arcanine-hisui"]], "b": [], "c": []}, {"s": 150, "a": [["ブリジュラス", 10, "archaludon"], ["ヒスイダイケンキ", 50, "samurott-hisui"], ["ソウブレイズ", 50, "ceruledge"], ["バサギリ", 100, "kleavor"], ["ハリーマン", 100, "qwilfish-hisui"], ["ゴリランダー", "mc", "rillaboom"], ["イエッサン♀", "mc", "indeedee-f"], ["マフィティフ", "mc", "mabosstiff"]], "b": [["サザンドラ", 20, "hydreigon"]], "c": []}, {"s": 149, "a": [["サーフゴー", 50, "gholdengo"]], "b": [], "c": []}, {"s": 148, "a": [], "b": [["ミミッキュ", 10, "mimikyu"]], "c": []}, {"s": 147, "a": [["メガジュペッタ", 100, "banette-mega"]], "b": [["イエッサン♂", "mc", "indeedee"]], "c": []}, {"s": 146, "a": [["メガギャラドス", 10, "gyarados-mega"], ["ギャラドス", 10, "gyarados"]], "b": [["グライオン", 100, "gliscor"]], "c": [["メガカエンジシ", 100, "pyroar"]]}, {"s": 145, "a": [["メガカイリュー", 10, "dragonite"], ["カイリュー", 10, "dragonite"], ["メガメガニウム", 50, "meganium"], ["メガニウム", 50, "meganium"], ["メガフシギバナ", 50, "venusaur-mega"], ["フシギバナ", 50, "venusaur"], ["マンムー", 100, "mamoswine"], ["バイバニラ", 100, "vanilluxe"], ["シャンデラ", 100, "chandelure"], ["ビビヨン", 100, "vivillon"]], "b": [["クエスパトラ", 100, "espathra"]], "c": []}, {"s": 144, "a": [["ホルード", 100, "diggersby"]], "b": [["ルカリオ", 50, "lucario"], ["イキリンコ", "mc", "squawkabilly"]], "c": []}, {"s": 143, "a": [["メガカメックス", 50, "blastoise-mega"], ["カメックス", 50, "blastoise"], ["イダイトウ♂", 20, "basculegion"]], "b": [], "c": [["マスカーニャ", 10, "meowscarada"]]}, {"s": 142, "a": [], "b": [["バリヤード", "mc", "mr-mime"], ["フォクスライ", "mc", "thievul"]], "c": [["メガゲッコウガ", 20, "greninja"], ["ゲッコウガ", 20, "greninja"]]}, {"s": 140, "a": [["ヘラクロス", 100, "heracross"]], "b": [["ドリュウズ", 50, "excadrill"]], "c": [["オオニューラ", 50, "sneasler"], ["メガユキメノコ", 100, "froslass"], ["ユキメノコ", 100, "froslass"], ["メガボーマンダ", "mc", "salamence-mega"], ["インテレオン", "mc", "inteleon"]]}, {"s": 139, "a": [["メガスコヴィラン", 50, "scovillain"], ["スコヴィラン", 50, "scovillain"], ["メガフラエッテ", 50, "floette"], ["フラエッテ", 50, "floette"], ["メガハッサム", 20, "scizor-mega"], ["ハッサム", 20, "scizor"], ["ストリンダー(ハイ)", "mc", "toxtricity"], ["ストリンダー(ロー)", "mc", "toxtricity-lowkey"]], "b": [["セグレイブ", "mc", "baxcalibur"], ["メガセグレイブ", "mc", "baxcalibur"]], "c": [["エルフーン", 100, "whimsicott"], ["エースバーン", "mc", "cinderace"]]}, {"s": 138, "a": [], "b": [["キラフロル", 20, "glimmora"], ["Wロトム", 50, "rotom-wash"], ["Hロトム", 100, "rotom-heat"], ["Hウインディ", 100, "arcanine-hisui"]], "c": []}, {"s": 137, "a": [], "b": [["ブリジュラス", 10, "archaludon"], ["ヒスイダイケンキ", 50, "samurott-hisui"], ["ソウブレイズ", 50, "ceruledge"], ["バサギリ", 100, "kleavor"], ["ハリーマン", 100, "qwilfish-hisui"], ["ゴリランダー", "mc", "rillaboom"], ["イエッサン♀", "mc", "indeedee-f"], ["マフィティフ", "mc", "mabosstiff"]], "c": []}, {"s": 136, "a": [], "b": [["サーフゴー", 50, "gholdengo"]], "c": []}, {"s": 135, "a": [], "b": [], "c": [["メガスターミー", 50, "starmie"], ["スターミー", 50, "starmie"], ["ペルシアン", "mc", "persian"], ["ペルシアン(A)", "mc", "persian-alola"]]}, {"s": 134, "a": [["メガラグラージ", 50, "swampert-mega"], ["ラグラージ", 50, "swampert"], ["メガウツボット", 100, "victreebel"], ["ウツボット", 100, "victreebel"], ["エアームド", 100, "skarmory"], ["ポットデス", 100, "polteageist"], ["ラフレシア", 100, "vileplume"], ["メタグロス", 10, "metagross"]], "b": [["メガジュペッタ", 100, "banette-mega"]], "c": [["ジャローダ", 100, "serperior"]]}, {"s": 133, "a": [], "b": [["メガギャラドス", 10, "gyarados-mega"], ["ギャラドス", 10, "gyarados"]], "c": []}, {"s": 132, "a": [["ゴーゴート", "mc", "gogoat"]], "b": [["メガカイリュー", 10, "dragonite"], ["カイリュー", 10, "dragonite"], ["メガメガニウム", 50, "meganium"], ["メガニウム", 50, "meganium"], ["メガフシギバナ", 50, "venusaur-mega"], ["フシギバナ", 50, "venusaur"], ["マンムー", 100, "mamoswine"], ["バイバニラ", 100, "vanilluxe"], ["シャンデラ", 100, "chandelure"], ["ビビヨン", 100, "vivillon"]], "c": [["メガルカリオ", 50, "lucario-mega"], ["ゲンガー", 20, "gengar"], ["イッカネズミ", 100, "maushold"], ["Hゾロアーク", 100, "zoroark-hisui"]]}, {"s": 131, "a": [], "b": [["ホルード", 100, "diggersby"]], "c": []}, {"s": 130, "a": [["アーマーガア", 20, "corviknight"]], "b": [["メガカメックス", 50, "blastoise-mega"], ["カメックス", 50, "blastoise"], ["イダイトウ♂", 20, "basculegion"]], "c": [["メガメタグロス", 10, "metagross-mega"], ["メガライチュウY", 20, "raichu"], ["ライチュウ", 20, "raichu"], ["エーフィ", 100, "espeon"]]}, {"s": 129, "a": [["ラウドボーン", 50, "skeledirge"]], "b": [], "c": [["キュウコン(A)", 50, "ninetales-alola"]]}, {"s": 128, "a": [["ブラッキー", 50, "umbreon"], ["ネギガナイト", "mc", "sirfetchd"]], "b": [["ヘラクロス", 100, "heracross"]], "c": []}, {"s": 127, "a": [], "b": [["メガスコヴィラン", 50, "scovillain"], ["スコヴィラン", 50, "scovillain"], ["メガフラエッテ", 50, "floette"], ["フラエッテ", 50, "floette"], ["メガハッサム", 20, "scizor-mega"], ["ハッサム", 20, "scizor"], ["ストリンダー(ハイ)", "mc", "toxtricity"], ["ストリンダー(ロー)", "mc", "toxtricity-lowkey"]], "c": []}, {"s": 125, "a": [["ペリッパー", 100, "pelipper"]], "b": [], "c": [["パーモット", "mc", "pawmot"]]}, {"s": 124, "a": [["バンギラス", 50, "tyranitar"], ["ジュペッタ", 100, "banette"]], "b": [], "c": [["メガマフォクシー", 10, "delphox"], ["マフォクシー", 10, "delphox"], ["グライオン", 100, "gliscor"]]}, {"s": 123, "a": [["アシレーヌ", 10, "primarina"], ["ニンフィア", 50, "sylveon"], ["メガピクシー", 50, "clefable"], ["ピクシー", 50, "clefable"], ["ギルガルド", 50, "aegislash"], ["オーロンゲ", 50, "grimmsnarl"], ["エンペルト", 100, "empoleon"], ["Hヌメルゴン", 100, "goodra-hisui"], ["グレンアルマ", 100, "armarouge"], ["ガオガエン", 100, "incineroar"], ["ドデカバシ", 100, "toucannon"], ["カモネギ", "mc", "farfetchd"]], "b": [["メタグロス", 10, "metagross"]], "c": [["クエスパトラ", 100, "espathra"]]}, {"s": 122, "a": [], "b": [["メガラグラージ", 50, "swampert-mega"], ["ラグラージ", 50, "swampert"], ["メガウツボット", 100, "victreebel"], ["ウツボット", 100, "victreebel"], ["エアームド", 100, "skarmory"], ["ポットデス", 100, "polteageist"], ["ラフレシア", 100, "vileplume"]], "c": [["ガブリアス", 10, "garchomp"]]}, {"s": 120, "a": [], "b": [["ゴーゴート", "mc", "gogoat"]], "c": [["メガムクホーク", 50, "staraptor"], ["ムクホーク", 50, "staraptor"], ["メガリザードンY", 20, "charizard-megay"], ["リザードン", 20, "charizard"], ["メガバシャーモ", 50, "blaziken-mega"], ["バシャーモ", 50, "blaziken"], ["ウルガモス", 20, "volcarona"], ["メガガルーラ", 100, "kangaskhan-mega"], ["ガルーラ", 100, "kangaskhan"], ["メガサーナイト", 100, "gardevoir-mega"], ["サーナイト", 100, "gardevoir"], ["エルレイド", 100, "gallade"], ["ボーマンダ", "mc", "salamence"]]}, {"s": 119, "a": [], "b": [["アーマーガア", 20, "corviknight"]], "c": [["ミミロップ", 50, "lopunny"]]}, {"s": 118, "a": [], "b": [["ラウドボーン", 50, "skeledirge"]], "c": [["サザンドラ", 20, "hydreigon"]]}, {"s": 117, "a": [["マルノーム", "mc", "swalot"]], "b": [["ブラッキー", 50, "umbreon"], ["ネギガナイト", "mc", "sirfetchd"]], "c": [["ルカリオ", 50, "lucario"]]}, {"s": 116, "a": [], "b": [], "c": [["ミミッキュ", 10, "mimikyu"]]}, {"s": 115, "a": [], "b": [], "c": [["イエッサン♂", "mc", "indeedee"]]}, {"s": 114, "a": [], "b": [["ペリッパー", 100, "pelipper"]], "c": []}, {"s": 113, "a": [], "b": [["バンギラス", 50, "tyranitar"], ["ジュペッタ", 100, "banette"]], "c": []}, {"s": 112, "a": [["メガクチート", 50, "mawile-mega"], ["クチート", 50, "mawile"], ["ドドゲザン", 50, "kingambit"], ["マリルリ", 100, "azumarill"], ["ヤミラミ", 100, "sableye"], ["ヤバソチャ", 100, "sinistcha"], ["ニャイキング", "mc", "perrserker"]], "b": [["アシレーヌ", 10, "primarina"], ["ニンフィア", 50, "sylveon"], ["メガピクシー", 50, "clefable"], ["ピクシー", 50, "clefable"], ["ギルガルド", 50, "aegislash"], ["オーロンゲ", 50, "grimmsnarl"], ["エンペルト", 100, "empoleon"], ["Hヌメルゴン", 100, "goodra-hisui"], ["グレンアルマ", 100, "armarouge"], ["ガオガエン", 100, "incineroar"], ["ドデカバシ", 100, "toucannon"], ["カモネギ", "mc", "farfetchd"]], "c": [["イキリンコ", "mc", "squawkabilly"]]}, {"s": 110, "a": [], "b": [], "c": [["バリヤード", "mc", "mr-mime"], ["フォクスライ", "mc", "thievul"]]}, {"s": 108, "a": [["カバルドン", 10, "hippowdon"]], "b": [], "c": [["ドリュウズ", 50, "excadrill"], ["ヘラクロス", 100, "heracross"]]}, {"s": 107, "a": [], "b": [["マルノーム", "mc", "swalot"]], "c": [["キラフロル", 20, "glimmora"], ["Wロトム", 50, "rotom-wash"], ["Hロトム", 100, "rotom-heat"], ["Hウインディ", 100, "arcanine-hisui"], ["セグレイブ", "mc", "baxcalibur"], ["メガセグレイブ", "mc", "baxcalibur"]]}, {"s": 106, "a": [["ハラバリー", 50, "bellibolt"], ["プクリン", "mc", "wigglytuff"]], "b": [], "c": [["ブリジュラス", 10, "archaludon"], ["ヒスイダイケンキ", 50, "samurott-hisui"], ["ソウブレイズ", 50, "ceruledge"], ["バサギリ", 100, "kleavor"], ["ハリーマン", 100, "qwilfish-hisui"]]}, {"s": 105, "a": [["メガドラミドロ", 100, "dragalge"], ["ドラミドロ", 100, "dragalge"]], "b": [], "c": [["サーフゴー", 50, "gholdengo"], ["メタグロス", 10, "metagross"], ["ゴリランダー", "mc", "rillaboom"], ["イエッサン♀", "mc", "indeedee-f"], ["マフィティフ", "mc", "mabosstiff"]]}, {"s": 103, "a": [["オトスパス", "mc", "grapploct"]], "b": [], "c": [["メガジュペッタ", 100, "banette-mega"]]}, {"s": 102, "a": [["オニシズクモ", 100, "araquanid"]], "b": [["メガクチート", 50, "mawile-mega"], ["クチート", 50, "mawile"], ["ドドゲザン", 50, "kingambit"], ["マリルリ", 100, "azumarill"], ["ヤミラミ", 100, "sableye"], ["ヤバソチャ", 100, "sinistcha"], ["ニャイキング", "mc", "perrserker"]], "c": [["メガギャラドス", 10, "gyarados-mega"], ["ギャラドス", 10, "gyarados"]]}, {"s": 101, "a": [["グソクムシャ", "mc", "golisopod"], ["メガグソクムシャ", "mc", "golisopod"]], "b": [], "c": [["メガカイリュー", 10, "dragonite"], ["カイリュー", 10, "dragonite"], ["メガメガニウム", 50, "meganium"], ["メガニウム", 50, "meganium"], ["メガフシギバナ", 50, "venusaur-mega"], ["フシギバナ", 50, "venusaur"], ["マンムー", 100, "mamoswine"], ["バイバニラ", 100, "vanilluxe"], ["シャンデラ", 100, "chandelure"], ["ビビヨン", 100, "vivillon"]]}, {"s": 100, "a": [["オリーヴァ", "mc", "arboliva"]], "b": [], "c": [["メガカメックス", 50, "blastoise-mega"], ["カメックス", 50, "blastoise"], ["イダイトウ♂", 20, "basculegion"], ["ホルード", 100, "diggersby"]]}, {"s": 99, "a": [], "b": [["カバルドン", 10, "hippowdon"]], "c": []}, {"s": 97, "a": [], "b": [["ハラバリー", 50, "bellibolt"], ["プクリン", "mc", "wigglytuff"]], "c": [["メガスコヴィラン", 50, "scovillain"], ["スコヴィラン", 50, "scovillain"], ["メガフラエッテ", 50, "floette"], ["フラエッテ", 50, "floette"], ["メガハッサム", 20, "scizor-mega"], ["ハッサム", 20, "scizor"]]}, {"s": 96, "a": [], "b": [["メガドラミドロ", 100, "dragalge"], ["ドラミドロ", 100, "dragalge"]], "c": []}, {"s": 95, "a": [["ドヒドイデ", 50, "toxapex"]], "b": [], "c": [["ペリッパー", 100, "pelipper"], ["ストリンダー(ハイ)", "mc", "toxtricity"], ["ストリンダー(ロー)", "mc", "toxtricity-lowkey"]]}, {"s": 94, "a": [], "b": [["オトスパス", "mc", "grapploct"]], "c": []}, {"s": 93, "a": [], "b": [["オニシズクモ", 100, "araquanid"]], "c": []}, {"s": 92, "a": [["カビゴン", 100, "snorlax"]], "b": [["グソクムシャ", "mc", "golisopod"], ["メガグソクムシャ", "mc", "golisopod"]], "c": [["メガラグラージ", 50, "swampert-mega"], ["ラグラージ", 50, "swampert"], ["メガウツボット", 100, "victreebel"], ["ウツボット", 100, "victreebel"], ["エアームド", 100, "skarmory"], ["ポットデス", 100, "polteageist"], ["ラフレシア", 100, "vileplume"]]}, {"s": 91, "a": [], "b": [["オリーヴァ", "mc", "arboliva"]], "c": []}, {"s": 89, "a": [["メガヤドラン", 100, "slowbro-mega"], ["ヤドラン", 100, "slowbro"]], "b": [], "c": [["アーマーガア", 20, "corviknight"]]}, {"s": 88, "a": [["Gヤドキング", 100, "slowking-galar"]], "b": [], "c": [["ラウドボーン", 50, "skeledirge"], ["ゴーゴート", "mc", "gogoat"]]}, {"s": 87, "a": [], "b": [["ドヒドイデ", 50, "toxapex"]], "c": [["ブラッキー", 50, "umbreon"], ["ジュペッタ", 100, "banette"]]}, {"s": 85, "a": [], "b": [], "c": [["ネギガナイト", "mc", "sirfetchd"]]}, {"s": 84, "a": [], "b": [["カビゴン", 100, "snorlax"]], "c": []}, {"s": 83, "a": [], "b": [], "c": [["バンギラス", 50, "tyranitar"]]}, {"s": 82, "a": [], "b": [], "c": [["アシレーヌ", 10, "primarina"], ["ニンフィア", 50, "sylveon"], ["メガピクシー", 50, "clefable"], ["ピクシー", 50, "clefable"], ["ギルガルド", 50, "aegislash"], ["オーロンゲ", 50, "grimmsnarl"], ["エンペルト", 100, "empoleon"], ["Hヌメルゴン", 100, "goodra-hisui"], ["グレンアルマ", 100, "armarouge"], ["ガオガエン", 100, "incineroar"], ["ドデカバシ", 100, "toucannon"]]}, {"s": 81, "a": [], "b": [["メガヤドラン", 100, "slowbro-mega"], ["ヤドラン", 100, "slowbro"]], "c": []}, {"s": 80, "a": [], "b": [["Gヤドキング", 100, "slowking-galar"]], "c": [["カモネギ", "mc", "farfetchd"]]}, {"s": 78, "a": [["ブリムオン", 100, "hatterene"]], "b": [], "c": []}, {"s": 75, "a": [], "b": [], "c": [["マルノーム", "mc", "swalot"]]}, {"s": 73, "a": [["コータス", 100, "torkoal"], ["バチンウニ", "mc", "pincurchin"]], "b": [], "c": []}, {"s": 72, "a": [], "b": [], "c": [["メガクチート", 50, "mawile-mega"], ["クチート", 50, "mawile"], ["ドドゲザン", 50, "kingambit"], ["マリルリ", 100, "azumarill"], ["ヤミラミ", 100, "sableye"], ["ヤバソチャ", 100, "sinistcha"]]}, {"s": 71, "a": [], "b": [["ブリムオン", 100, "hatterene"]], "c": []}, {"s": 70, "a": [], "b": [], "c": [["ニャイキング", "mc", "perrserker"]]}, {"s": 69, "a": [], "b": [], "c": [["カバルドン", 10, "hippowdon"]]}, {"s": 67, "a": [], "b": [["コータス", 100, "torkoal"], ["バチンウニ", "mc", "pincurchin"]], "c": [["ハラバリー", 50, "bellibolt"]]}, {"s": 66, "a": [], "b": [["メガドラミドロ", 100, "dragalge"], ["ドラミドロ", 100, "dragalge"]], "c": []}, {"s": 65, "a": [], "b": [], "c": [["プクリン", "mc", "wigglytuff"]]}, {"s": 64, "a": [], "b": [["オニシズクモ", 100, "araquanid"]], "c": []}, {"s": 62, "a": [], "b": [], "c": [["オトスパス", "mc", "grapploct"]]}, {"s": 60, "a": [], "b": [], "c": [["グソクムシャ", "mc", "golisopod"], ["メガグソクムシャ", "mc", "golisopod"]]}, {"s": 59, "a": [], "b": [], "c": [["オリーヴァ", "mc", "arboliva"]]}, {"s": 57, "a": [], "b": [], "c": [["ドヒドイデ", 50, "toxapex"]]}, {"s": 50, "a": [], "b": [], "c": [["メガヤドラン", 100, "slowbro-mega"], ["ヤドラン", 100, "slowbro"]]}, {"s": 49, "a": [], "b": [], "c": [["ブリムオン", 100, "hatterene"]]}, {"s": 45, "a": [], "b": [], "c": [["コータス", 100, "torkoal"]]}, {"s": 35, "a": [], "b": [], "c": [["バチンウニ", "mc", "pincurchin"]]}];
+
+  function getCls(r) {
+    if (r === "mc") return "r-mc";
+    if (r <= 10) return "r-10";
+    if (r <= 20) return "r-20";
+    if (r <= 50) return "r-50";
+    return "r-100";
+  }
+
+  function build(list) {
+    if (!list || !list.length) return '<span class="dash">-</span>';
+    return list.map(function(item) {
+      return '<div class="pk-btn"><img src="https://play.pokemonshowdown.com/sprites/gen5/' + item[2] + '.png" loading="lazy"><span class="' + getCls(item[1]) + '">' + item[0] + '</span></div>';
+    }).join('<br>');
+  }
+
+  var tbody = document.getElementById('spdTbody');
+  var html = '';
+  for (var i = 0; i < raw.length; i++) {
+    var row = raw[i];
+    html += '<tr>' +
+      '<td class="spd-cell">' + row.s + '</td>' +
+      '<td>' + build(row.a) + '</td>' +
+      '<td>' + build(row.b) + '</td>' +
+      '<td>' + build(row.c) + '</td>' +
+      '</tr>';
+  }
+  tbody.innerHTML = html;
+
+  document.getElementById('spdMainTable').addEventListener('click', function(e) {
+    var btn = e.target.closest('.pk-btn');
+    if (btn) {
+      btn.classList.toggle('active');
+      return;
+    }
+    var cell = e.target.closest('.spd-cell');
+    if (cell) {
+      cell.parentElement.classList.toggle('border-line');
+    }
+  });
+})();
+</script>
+
+</body>
+</html>
